@@ -47,14 +47,14 @@ export interface IOrder {
   deliveryEmailSent?: boolean;
   deliveryEmailSentAt?: Date;
   // Admin audit log
-  auditLog?: Array<{
+  auditLog?: {
     byUserId?: string;
     byName?: string;
     byEmail?: string;
     at?: Date;
     reason?: string;
     changes?: string[];
-  }}>;
+  }[];
 }
 
 // Mongoose Document

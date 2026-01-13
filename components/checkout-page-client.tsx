@@ -673,7 +673,7 @@ const indianStates = [
                     <p className="text-gray-600">Choose your preferred payment option</p>
                   </CardHeader>
                   <CardContent>
-                    <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-4">
+<RadioGroup value={paymentMethod} onValueChange={value => setPaymentMethod(value as 'card' | 'upi' | 'cod' | 'razorpay')} className="space-y-4">
                       <div className="flex items-center space-x-4 p-4 rounded-2xl border-2 border-gray-200 hover:border-blue-300 transition-colors">
                         <RadioGroupItem value="card" id="card" className="text-blue-600" />
                         <Label htmlFor="card" className="flex items-center gap-3 font-medium cursor-pointer flex-1">
