@@ -228,37 +228,63 @@ export async function PUT(
       await connectDB();
 
       const updates = await request.json();
-      
-      // Auto-generate SEO fields if not provided in updates
-      if (updates.name && !updates.seoTitle) {
-        updates.seoTitle = `${updates.name} - Housekeeping Essentials| Home Utility Products`;
-      }
-      
-      if (updates.name && !updates.seoDescription) {
-        updates.seoDescription = `Shop premium ${updates.name.toLowerCase()} products at Home Utility Products. Discover top brands and authentic products with free delivery.`;
-      }
-      
-      if (updates.name && (!updates.seoKeywords || updates.seoKeywords.length === 0)) {
-        updates.seoKeywords = [
-          updates.name.toLowerCase(),
-          'beauty products',
-          'skincare',
-          'makeup',
-          'authentic products',
-          'premium beauty'
-        ];
+
+      /**
+       * 🔐 SEO SAFE HELPERS
+       */
+      const MAX_SEO_TITLE_LENGTH = 60;
+
+      const buildSeoTitle = (name: string) => {
+        const base = `${name} | Home Utility`;
+        return base.length > MAX_SEO_TITLE_LENGTH
+          ? base.slice(0, MAX_SEO_TITLE_LENGTH).trim()
+          : base;
+      };
+
+      const buildSeoDescription = (name: string) =>
+        `Buy ${name.toLowerCase()} products online. Trusted housekeeping and home utility essentials with fast delivery.`;
+
+      /**
+       * 🧠 Auto-generate SEO fields (SAFE)
+       */
+      if (updates.name) {
+        if (!updates.seoTitle) {
+          updates.seoTitle = buildSeoTitle(updates.name);
+        } else if (updates.seoTitle.length > MAX_SEO_TITLE_LENGTH) {
+          updates.seoTitle = updates.seoTitle
+            .slice(0, MAX_SEO_TITLE_LENGTH)
+            .trim();
+        }
+
+        if (!updates.seoDescription) {
+          updates.seoDescription = buildSeoDescription(updates.name);
+        }
+
+        if (!updates.seoKeywords || updates.seoKeywords.length === 0) {
+          updates.seoKeywords = [
+            updates.name.toLowerCase(),
+            'home utility',
+            'housekeeping products',
+            'cleaning essentials',
+            'daily use products'
+          ];
+        }
       }
 
-      // Determine if the id is a MongoDB ObjectId or a slug string
+      /**
+       * 🔍 Find by ObjectId or slug
+       */
       const isObjectId = /^[0-9a-fA-F]{24}$/.test(params.id);
       const query = isObjectId ? { _id: params.id } : { slug: params.id };
-      
+
       const category = await Category.findOneAndUpdate(
-        query, 
-        updates, 
-        { new: true, runValidators: true }
-      )
-      .populate({
+        query,
+        updates,
+        {
+          new: true,
+          runValidators: true
+        }
+      ).populate({
         path: 'subcategories',
         match: { isActive: true },
         select: 'name slug description image seoTitle seoDescription seoKeywords',
