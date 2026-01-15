@@ -733,7 +733,14 @@ const [statusUpdateForm, setStatusUpdateForm] = useState<StatusUpdateForm>({
                                 price: product.price,
                                 originalPrice: product.originalPrice,
                                 images: product.images || [''],
-                                category: typeof product.category === 'object' ? product.category.id : product.category,
+                                category:
+                                  product.category &&
+                                  typeof product.category === 'object' &&
+                                  'id' in product.category
+                                    ? String((product.category as any).id)
+                                    : product.category
+                                    ? String(product.category as any)
+                                    : '',
                                 subcategory: product.subcategory || '',
                                 brand: product.brand,
                                 stock: product.stock,
@@ -764,7 +771,14 @@ const [statusUpdateForm, setStatusUpdateForm] = useState<StatusUpdateForm>({
                                 price: product.price,
                                 originalPrice: product.originalPrice,
                                 images: product.images || [''],
-                                category: typeof product.category === 'object' ? product.category.id : product.category,
+                                category:
+                                  product.category &&
+                                  typeof product.category === 'object' &&
+                                  'id' in product.category
+                                    ? String((product.category as any).id)
+                                    : product.category
+                                    ? String(product.category as any)
+                                    : '',
                                 subcategory: product.subcategory || '',
                                 brand: product.brand,
                                 stock: product.stock,
@@ -1196,9 +1210,16 @@ const [statusUpdateForm, setStatusUpdateForm] = useState<StatusUpdateForm>({
                     ))
                   ) : (
                     adminCategories.map((category) => {
-                      const categoryProducts = products.filter(p => 
-                        (typeof p.category === 'object' ? p.category.id : p.category) === category.id
-                      );
+                      const categoryProducts = products.filter((p) => {
+                        const cat = p.category as any;
+                        const productCategoryId =
+                          cat && typeof cat === 'object' && 'id' in cat
+                            ? String(cat.id)
+                            : cat
+                            ? String(cat)
+                            : null;
+                        return productCategoryId !== null && productCategoryId === String(category.id);
+                      });
                       
                       return (
                         <TableRow key={category.id}>
