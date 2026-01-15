@@ -4,7 +4,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-BeautyMart is a full-stack e-commerce application specializing in beauty and cosmetics products. Built with Next.js 13 (App Router), TypeScript, MongoDB, and modern React patterns.
+Home Utility Products is a full-stack e-commerce application specializing in beauty and cosmetics products. Built with Next.js 13 (App Router), TypeScript, MongoDB, and modern React patterns.
 
 ## Tech Stack
 
@@ -97,8 +97,8 @@ npm run dev
 ### Required Environment Variables
 ```bash
 # Database
-MONGODB_URI=mongodb://localhost:27017/beautymart
-MONGODB_DB_NAME=beautymart
+MONGODB_URI=mongodb://localhost:27017/Home Utility Products
+MONGODB_DB_NAME=Home Utility Products
 
 # Authentication
 JWT_SECRET=your-jwt-secret-key

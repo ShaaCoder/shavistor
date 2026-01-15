@@ -139,8 +139,8 @@ export async function GET(
       sortOrder: category.sortOrder,
       
       // Enhanced SEO fields
-      seoTitle: category.seoTitle || `${category.name} - Premium Beauty Products | BeautyMart`,
-      seoDescription: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at BeautyMart. ${productCount} products available. ✓ Top Brands ✓ Authentic ✓ Free Delivery`,
+      seoTitle: category.seoTitle || `${category.name} - Housekeeping Essentials| Home Utility Products`,
+      seoDescription: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at Home Utility Products. ${productCount} products available. ✓ Top Brands ✓ Authentic ✓ Free Delivery`,
       seoKeywords: category.seoKeywords || [
         category.name.toLowerCase(),
         'beauty products',
@@ -172,8 +172,8 @@ export async function GET(
       
       // Additional SEO metadata for frontend use
       seo: {
-        title: category.seoTitle || `${category.name} - Premium Beauty Products | BeautyMart`,
-        description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at BeautyMart. ${productCount} products available. Discover top brands and authentic products with free delivery.`,
+        title: category.seoTitle || `${category.name} - Housekeeping Essentials| Home Utility Products`,
+        description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at Home Utility Products. ${productCount} products available. Discover top brands and authentic products with free delivery.`,
         keywords: category.seoKeywords || [
           category.name.toLowerCase(),
           'beauty products',
@@ -186,7 +186,7 @@ export async function GET(
         ],
         openGraph: {
           title: category.seoTitle || `${category.name} - Premium Beauty Products`,
-          description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at BeautyMart. ${productCount} products available.`,
+          description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at Home Utility Products. ${productCount} products available.`,
           image: category.image || '',
           url: `/category/${category.slug}`,
           type: 'website'
@@ -194,7 +194,7 @@ export async function GET(
         twitter: {
           card: 'summary_large_image',
           title: category.seoTitle || `${category.name} - Premium Beauty Products`,
-          description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at BeautyMart. ${productCount} products available.`,
+          description: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at Home Utility Products. ${productCount} products available.`,
           image: category.image || ''
         }
       },
@@ -231,11 +231,11 @@ export async function PUT(
       
       // Auto-generate SEO fields if not provided in updates
       if (updates.name && !updates.seoTitle) {
-        updates.seoTitle = `${updates.name} - Premium Beauty Products | BeautyMart`;
+        updates.seoTitle = `${updates.name} - Housekeeping Essentials| Home Utility Products`;
       }
       
       if (updates.name && !updates.seoDescription) {
-        updates.seoDescription = `Shop premium ${updates.name.toLowerCase()} products at BeautyMart. Discover top brands and authentic products with free delivery.`;
+        updates.seoDescription = `Shop premium ${updates.name.toLowerCase()} products at Home Utility Products. Discover top brands and authentic products with free delivery.`;
       }
       
       if (updates.name && (!updates.seoKeywords || updates.seoKeywords.length === 0)) {

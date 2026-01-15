@@ -6,7 +6,7 @@
 const mongoose = require('mongoose');
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/beautymart';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Home Utility Products';
 
 // Category schema
 const categorySchema = new mongoose.Schema({

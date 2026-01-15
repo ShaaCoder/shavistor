@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
     if (!res.ok) {
       return {
-        title: 'Category Not Found | BeautyMart',
+        title: 'Category Not Found | Home Utility Products',
         description: 'The requested category could not be found.'
       };
     }
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     const { data } = await res.json();
     if (!data) {
       return {
-        title: 'Category Not Found | BeautyMart',
+        title: 'Category Not Found | Home Utility Products',
         description: 'The requested category could not be found.'
       };
     }
@@ -35,8 +35,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
     return generateCategoryMetadata(data.name, undefined, data.productCount);
   } catch (e) {
     return {
-      title: 'BeautyMart - Premium Categories',
-      description: 'Explore categories of premium beauty products at BeautyMart.'
+      title: 'Home Utility Products - Premium Categories',
+      description: 'Explore categories of Housekeeping Essentialsat Home Utility Products.'
     };
   }
 }

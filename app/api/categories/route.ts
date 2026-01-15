@@ -1,7 +1,7 @@
 /**
  * Categories API Routes
- * 
- * GET /api/categories - List all categories
+ *
+ * GET /api/categories  - List all categories
  * POST /api/categories - Create new category
  */
 
@@ -16,237 +16,224 @@ import {
   handleApiError,
   rateLimit,
   getClientIP,
-  withAuth
+  withAuth,
 } from '@/lib/api-helpers';
 
-/**
- * GET /api/categories
- * Retrieve all categories
- */
+/* ----------------------------- */
+/* Helpers (SEO Safe)             */
+/* ----------------------------- */
+const safeSeoTitle = (title: string) =>
+  title.length > 60 ? title.substring(0, 57) + '...' : title;
+
+const safeSeoDescription = (desc: string) =>
+  desc.length > 160 ? desc.substring(0, 157) + '...' : desc;
+
+/* ----------------------------- */
+/* GET /api/categories            */
+/* ----------------------------- */
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
-    // Rate limiting
     const clientIP = getClientIP(request);
     const rateLimitResult = rateLimit(`categories_get_${clientIP}`, 100, 60000);
-    
+
     if (!rateLimitResult.allowed) {
-      return createErrorResponse(
-        'Too many requests',
-        429,
-        'Rate limit exceeded'
-      );
+      return createErrorResponse('Too many requests', 429, 'Rate limit exceeded');
     }
 
-    // Check if admin is requesting all categories
     const showAll = request.nextUrl.searchParams.get('all') === 'true';
     const query = showAll ? {} : { isActive: true };
-    
-    // Fetch categories based on query
-    const categories = await Category.find(query)
-      .sort({ name: 1 })
-      .lean() as any[];
 
-    // Helper: get a category's own ID plus all descendant category IDs
+    const categories = (await Category.find(query)
+      .sort({ name: 1 })
+      .lean()) as any[];
+
     const getCategoryAndDescendantIds = async (rootId: any) => {
       const seen = new Set<string>([String(rootId)]);
       let frontier: any[] = [rootId];
+
       while (frontier.length) {
-        const children = await Category.find({ parentCategory: { $in: frontier } })
+        const children = await Category.find({
+          parentCategory: { $in: frontier },
+        })
           .select('_id')
           .lean();
-        const next: any[] = [];
+
+        frontier = [];
         for (const child of children) {
           const idStr = String(child._id);
           if (!seen.has(idStr)) {
             seen.add(idStr);
-            next.push(child._id);
+            frontier.push(child._id);
           }
         }
-        frontier = next;
       }
-      // Convert to ObjectId array for $in query
-      return Array.from(seen).map(id => new mongoose.Types.ObjectId(id));
+
+      return Array.from(seen).map((id) => new mongoose.Types.ObjectId(id));
     };
 
-    // Calculate real-time product counts for each category (including descendants)
-    const categoriesWithRealCounts: any[] = [];
+    const categoriesWithCounts: any[] = [];
+
     for (const category of categories) {
-      const allCategoryIds = await getCategoryAndDescendantIds(category._id);
-      // Get real-time product count across the whole subtree
-      const realProductCount = await Product.countDocuments({
-        category: { $in: allCategoryIds },
-        isActive: true
+      const allIds = await getCategoryAndDescendantIds(category._id);
+      const realCount = await Product.countDocuments({
+        category: { $in: allIds },
+        isActive: true,
       });
-      
-      // Update stored count if different (async, don't wait)
-      if (category.productCount !== realProductCount) {
+
+      if (category.productCount !== realCount) {
         Category.findByIdAndUpdate(category._id, {
-          productCount: realProductCount
-        }).catch(err => console.error('Error updating category count:', err));
+          productCount: realCount,
+        }).catch(() => {});
       }
-      
-      categoriesWithRealCounts.push({
+
+      categoriesWithCounts.push({
         ...category,
-        productCount: realProductCount // Use real-time (subtree) count
+        productCount: realCount,
       });
     }
 
-    // Format response data with enhanced SEO fields
-    const formattedCategories = categoriesWithRealCounts.map(category => ({
+    const formattedCategories = categoriesWithCounts.map((category) => ({
       id: category._id.toString(),
       name: category.name,
       slug: category.slug,
       description: category.description,
       image: category.image,
-      icon: category.icon,
-      color: category.color,
       subcategories: category.subcategories,
       isActive: category.isActive,
       isFeatured: category.isFeatured,
-      productCount: category.productCount || 0,
       sortOrder: category.sortOrder,
-      
-      // Enhanced SEO fields
-      seoTitle: category.seoTitle || `${category.name} - Premium Beauty Products | BeautyMart`,
-      seoDescription: category.seoDescription || `Shop premium ${category.name.toLowerCase()} products at BeautyMart. ${category.productCount || 0} products available. ✓ Top Brands ✓ Authentic ✓ Free Delivery`,
-      seoKeywords: category.seoKeywords || [
-        category.name.toLowerCase(),
-        'beauty products',
-        'skincare',
-        'makeup',
-        'authentic products',
-        'premium beauty'
-      ],
-      
-      // SEO-friendly URL path
+      productCount: category.productCount || 0,
+
+      seoTitle: safeSeoTitle(
+        category.seoTitle || `${category.name} | ShaviStore`
+      ),
+      seoDescription: safeSeoDescription(
+        category.seoDescription ||
+          `Shop ${category.name.toLowerCase()} products for household cleaning and utility use at ShaviStore.`
+      ),
+      seoKeywords:
+        category.seoKeywords || [
+          category.name.toLowerCase(),
+          'home utility',
+          'housekeeping products',
+          'household cleaning',
+        ],
+
       canonicalUrl: `/category/${category.slug}`,
       breadcrumbs: [
         { name: 'Home', url: '/' },
         { name: 'Categories', url: '/category' },
-        { name: category.name, url: `/category/${category.slug}` }
-      ]
+        { name: category.name, url: `/category/${category.slug}` },
+      ],
     }));
 
     return createSuccessResponse(
       formattedCategories,
-      `Retrieved ${categories.length} categories`
+      `Retrieved ${formattedCategories.length} categories`
     );
-
   } catch (error) {
     return handleApiError(error, 'GET /api/categories');
   }
 }
 
-/**
- * POST /api/categories
- * Create a new category
- */
+/* ----------------------------- */
+/* POST /api/categories           */
+/* ----------------------------- */
 export async function POST(request: NextRequest) {
-  return withAuth(async (req, _user) => {
-    try {
-      await connectDB();
+  return withAuth(
+    async (req) => {
+      try {
+        await connectDB();
 
-      // Rate limiting
-      const clientIP = getClientIP(req);
-      const rateLimitResult = rateLimit(`categories_post_${clientIP}`, 10, 60000);
-      
-      if (!rateLimitResult.allowed) {
-        return createErrorResponse(
-          'Too many requests',
-          429,
-          'Rate limit exceeded'
+        const clientIP = getClientIP(req);
+        const rateLimitResult = rateLimit(
+          `categories_post_${clientIP}`,
+          10,
+          60000
         );
-      }
 
-      // Parse request body
-      const body = await req.json();
+        if (!rateLimitResult.allowed) {
+          return createErrorResponse(
+            'Too many requests',
+            429,
+            'Rate limit exceeded'
+          );
+        }
 
-      // Validate required fields
-      if (!body.name || !body.slug) {
-        return createErrorResponse(
-          'Name and slug are required',
-          400,
-          'Validation Error'
+        const body = await req.json();
+
+        if (!body.name || !body.slug) {
+          return createErrorResponse(
+            'Name and slug are required',
+            400,
+            'Validation Error'
+          );
+        }
+
+        const newCategory = new Category({
+          name: body.name,
+          slug: body.slug,
+          description: body.description || '',
+          image: Array.isArray(body.images)
+            ? body.images[0]
+            : body.image || '',
+          parentCategory: body.parentCategory || null,
+          subcategories: body.subcategories || [],
+          isActive: body.isActive ?? true,
+          isFeatured: body.isFeatured || false,
+          sortOrder: body.sortOrder || 0,
+          productCount: 0,
+
+          seoTitle: safeSeoTitle(body.seoTitle || body.name),
+          seoDescription: safeSeoDescription(
+            body.seoDescription ||
+              `Buy ${body.name.toLowerCase()} products for everyday household cleaning and utility use.`
+          ),
+          seoKeywords:
+            body.seoKeywords || [
+              body.name.toLowerCase(),
+              'home utility',
+              'housekeeping products',
+              'household cleaning',
+            ],
+        });
+
+        await newCategory.save();
+
+        return createSuccessResponse(
+          {
+            id: newCategory._id.toString(),
+            name: newCategory.name,
+            slug: newCategory.slug,
+            description: newCategory.description,
+            image: newCategory.image,
+            subcategories: newCategory.subcategories,
+            isActive: newCategory.isActive,
+            isFeatured: newCategory.isFeatured,
+            sortOrder: newCategory.sortOrder,
+            productCount: newCategory.productCount,
+
+            seoTitle: newCategory.seoTitle,
+            seoDescription: newCategory.seoDescription,
+            seoKeywords: newCategory.seoKeywords,
+
+            canonicalUrl: `/category/${newCategory.slug}`,
+          },
+          'Category created successfully'
         );
+      } catch (error) {
+        return handleApiError(error, 'POST /api/categories');
       }
-
-      // Create new category with enhanced SEO fields
-      const newCategory = new Category({
-        name: body.name,
-        slug: body.slug,
-        description: body.description || '',
-        image: body.image || '',
-        icon: body.icon || '',
-        color: body.color || '',
-        parentCategory: body.parentCategory || null,
-        subcategories: body.subcategories || [],
-        isActive: body.isActive !== undefined ? body.isActive : true,
-        isFeatured: body.isFeatured || false,
-        sortOrder: body.sortOrder || 0,
-        productCount: 0,
-        
-        // Auto-generate SEO fields if not provided
-        seoTitle: body.seoTitle || `${body.name} - Premium Beauty Products | BeautyMart`,
-        seoDescription: body.seoDescription || `Shop premium ${body.name.toLowerCase()} products at BeautyMart. Discover top brands and authentic products with free delivery.`,
-        seoKeywords: body.seoKeywords || [
-          body.name.toLowerCase(),
-          'beauty products',
-          'skincare',
-          'makeup',
-          'authentic products',
-          'premium beauty'
-        ]
-      });
-
-      await newCategory.save();
-
-      // Format response with enhanced SEO fields
-      const formattedCategory = {
-        id: newCategory._id.toString(),
-        name: newCategory.name,
-        slug: newCategory.slug,
-        description: newCategory.description,
-        image: newCategory.image,
-        icon: newCategory.icon,
-        color: newCategory.color,
-        parentCategory: newCategory.parentCategory,
-        subcategories: newCategory.subcategories,
-        isActive: newCategory.isActive,
-        isFeatured: newCategory.isFeatured,
-        sortOrder: newCategory.sortOrder,
-        productCount: newCategory.productCount,
-        
-        // Enhanced SEO fields
-        seoTitle: newCategory.seoTitle,
-        seoDescription: newCategory.seoDescription,
-        seoKeywords: newCategory.seoKeywords,
-        
-        // SEO-friendly URL path
-        canonicalUrl: `/category/${newCategory.slug}`,
-        breadcrumbs: [
-          { name: 'Home', url: '/' },
-          { name: 'Categories', url: '/category' },
-          { name: newCategory.name, url: `/category/${newCategory.slug}` }
-        ]
-      };
-
-      return createSuccessResponse(
-        formattedCategory,
-        'Category created successfully'
-      );
-
-    } catch (error) {
-      return handleApiError(error, 'POST /api/categories');
-    }
-  }, ['admin'])(request);
+    },
+    ['admin'] // keep admin-only
+  )(request);
 }
 
-/**
- * OPTIONS /api/categories
- * Handle CORS preflight requests
- */
+/* ----------------------------- */
+/* OPTIONS (CORS)                 */
+/* ----------------------------- */
 export async function OPTIONS() {
   return new Response(null, {
     status: 200,

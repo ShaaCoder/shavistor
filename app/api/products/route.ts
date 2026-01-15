@@ -223,7 +223,7 @@ export async function GET(request: NextRequest) {
         seoTitle: (product.category as any).seoTitle,
         seoDescription: (product.category as any).seoDescription,
         seoKeywords: (product.category as any).seoKeywords
-      } : typeof product.category === 'object' && '_id' in product.category ? String(product.category._id) : product.category,
+      } : product.category && typeof product.category === 'object' && '_id' in product.category ? String(product.category._id) : product.category,
       subcategory: product.subcategory,
       brand: product.brand,
       stock: product.stock,
@@ -237,7 +237,7 @@ export async function GET(request: NextRequest) {
       isFeatured: product.isFeatured,
       
       // Enhanced SEO fields
-      metaTitle: product.metaTitle || `${product.name} - ${product.brand} | BeautyMart`,
+      metaTitle: product.metaTitle || `${product.name} - ${product.brand} | Home Utility Products`,
       metaDescription: product.metaDescription || `Buy ${product.name} by ${product.brand}. ${product.description.substring(0, 120)}... ✓ Authentic ✓ Free Delivery`,
       keywords: product.keywords || [
         product.name.toLowerCase(),
@@ -358,7 +358,7 @@ export async function POST(request: NextRequest) {
 
     // Auto-generate SEO metadata if not provided
     if (!newProduct.metaTitle) {
-      newProduct.metaTitle = `${newProduct.name} - ${newProduct.brand} | BeautyMart`;
+      newProduct.metaTitle = `${newProduct.name} - ${newProduct.brand} | Home Utility Products`;
     }
     if (!newProduct.metaDescription) {
       newProduct.metaDescription = `Buy ${newProduct.name} by ${newProduct.brand}. ${newProduct.description.substring(0, 120)}... ✓ Authentic ✓ Free Delivery`;

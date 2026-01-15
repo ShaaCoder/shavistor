@@ -30,11 +30,11 @@ export interface SEOConfig {
 }
 
 export const seoConfig: SEOConfig = {
-  siteName: 'BeautyMart',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://beautymart.com',
-  defaultTitle: 'BeautyMart - Your Ultimate Beauty Destination',
-  defaultDescription: 'Discover premium beauty products from top brands. Shop skincare, makeup, wellness essentials, and more with free delivery and authentic products.',
-  twitterHandle: '@beautymart',
+  siteName: 'Home Utility Products',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://Home Utility Products.com',
+  defaultTitle: 'Home Utility Products - Your Ultimate Beauty Destination',
+  defaultDescription: 'Discover Housekeeping Essentialsfrom top brands. Shop skincare, makeup, wellness essentials, and more with free delivery and authentic products.',
+  twitterHandle: '@Home Utility Products',
 };
 
 // Generate SEO-friendly slug
@@ -218,9 +218,9 @@ export function generateOrganizationStructuredData() {
       availableLanguage: ['English', 'Hindi'],
     },
     sameAs: [
-      'https://www.facebook.com/beautymart',
-      'https://www.instagram.com/beautymart',
-      'https://twitter.com/beautymart',
+      'https://www.facebook.com/Home Utility Products',
+      'https://www.instagram.com/Home Utility Products',
+      'https://twitter.com/Home Utility Products',
     ],
   };
 }
@@ -254,7 +254,7 @@ export function generatePageMetadata(
     'beauty products',
     'skincare',
     'makeup',
-    'BeautyMart',
+    'Home Utility Products',
     'authentic products',
     'free delivery'
   ].join(', ');

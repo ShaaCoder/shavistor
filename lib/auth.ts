@@ -51,8 +51,8 @@ export function generateAccessToken(user: IUserDocument): string {
 
   return jwt.sign(payload, env.JWT_SECRET, {
     expiresIn: env.JWT_EXPIRES_IN,
-    issuer: 'beautymart-api',
-    audience: 'beautymart-client',
+    issuer: 'Home Utility Products-api',
+    audience: 'Home Utility Products-client',
   } as SignOptions);
 }
 
@@ -67,8 +67,8 @@ export async function generateRefreshToken(user: IUserDocument): Promise<string>
 
   const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET, {
     expiresIn: env.JWT_REFRESH_EXPIRES_IN,
-    issuer: 'beautymart-api',
-    audience: 'beautymart-client',
+    issuer: 'Home Utility Products-api',
+    audience: 'Home Utility Products-client',
   } as SignOptions);
 
   user.refreshToken = hashToken(refreshToken);
@@ -84,8 +84,8 @@ export async function generateRefreshToken(user: IUserDocument): Promise<string>
 export function verifyAccessToken(token: string): TokenPayload | null {
   try {
     return jwt.verify(token, env.JWT_SECRET, {
-      issuer: 'beautymart-api',
-      audience: 'beautymart-client',
+      issuer: 'Home Utility Products-api',
+      audience: 'Home Utility Products-client',
     }) as TokenPayload;
   } catch (error) {
     return null;
@@ -98,8 +98,8 @@ export function verifyAccessToken(token: string): TokenPayload | null {
 export async function verifyRefreshToken(token: string, user: IUserDocument): Promise<RefreshTokenPayload | null> {
   try {
     const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET, {
-      issuer: 'beautymart-api',
-      audience: 'beautymart-client',
+      issuer: 'Home Utility Products-api',
+      audience: 'Home Utility Products-client',
     }) as RefreshTokenPayload;
 
     if (!user.refreshToken || !verifyHashedToken(token, user.refreshToken)) {

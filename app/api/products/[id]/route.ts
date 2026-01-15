@@ -128,7 +128,7 @@ export async function GET(
       isFeatured: product.isFeatured,
       
       // Enhanced SEO fields
-      metaTitle: product.metaTitle || `${product.name} - ${product.brand} | BeautyMart`,
+      metaTitle: product.metaTitle || `${product.name} - ${product.brand} | Home Utility Products`,
       metaDescription: product.metaDescription || `Buy ${product.name} by ${product.brand}. ${product.description.substring(0, 120)}... ✓ Authentic ✓ Free Delivery ✓ Easy Returns`,
       keywords: product.keywords || [
         product.name.toLowerCase(),
@@ -164,7 +164,7 @@ export async function GET(
       
       // Additional SEO metadata for frontend use
       seo: {
-        title: product.metaTitle || `${product.name} - ${product.brand} | BeautyMart`,
+        title: product.metaTitle || `${product.name} - ${product.brand} | Home Utility Products`,
         description: product.metaDescription || `Buy ${product.name} by ${product.brand}. ${product.description.substring(0, 150)}... ✓ Authentic Products ✓ Free Delivery ✓ Easy Returns`,
         keywords: product.keywords || [
           product.name.toLowerCase(),

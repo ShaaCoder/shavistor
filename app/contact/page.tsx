@@ -36,7 +36,7 @@ export default function ContactUs() {
               </h2>
               <div className="bg-gray-50 p-6 rounded-md">
                 <p className="text-gray-700 mb-2">
-                  <strong>Email:</strong> <a href="mailto:support@shavistore.in" className="text-indigo-600 hover:underline">support@shavistore.in</a>
+                  <strong>Email:</strong> <a href="mailto:shavi8810@gmail.com" className="text-indigo-600 hover:underline">shavi8810@gmail.com</a>
                 </p>
                 <p className="text-sm text-gray-600">
                   For general inquiries, order issues, or returns.
@@ -51,7 +51,7 @@ export default function ContactUs() {
               </h2>
               <div className="bg-gray-50 p-6 rounded-md">
                 <p className="text-gray-700 mb-2">
-                  <strong>Phone:</strong> <a href="tel:+91-XXXX-XXXXXX" className="text-indigo-600 hover:underline">+91-XXXX-XXXXXX</a>
+                  <strong>Phone:</strong> <a href="tel:+91-8810524651" className="text-indigo-600 hover:underline">+91-8810524651</a>
                 </p>
                 <p className="text-sm text-gray-600">
                   Available Monday–Friday, 9 AM–6 PM IST.
@@ -69,7 +69,7 @@ export default function ContactUs() {
                   <strong>Business Name:</strong> ShaviStore
                 </p>
                 <p className="text-gray-700 mb-2">
-                  <strong>Address:</strong> [Your Street Address], Bahadurgarh, Haryana 124507, India
+                  <strong>Address:</strong> Meer Vihar MubarakPurDabas, New Delhi-110081  , India
                 </p>
                 <p className="text-sm text-gray-600">
                   For in-person visits or local pickups (by appointment).

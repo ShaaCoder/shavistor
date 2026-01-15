@@ -28,7 +28,7 @@ export default function RefundPolicy() {
             <p className="text-lg text-gray-700 mb-8 leading-relaxed">
               At <strong className="text-indigo-600">ShaviStore</strong>, customer satisfaction is our top priority. We strive to ensure a seamless shopping experience, but we understand that sometimes returns or cancellations are necessary. This policy outlines our guidelines for order cancellations, refunds, and returns to make the process as straightforward as possible. By placing an order, you agree to these terms.
             </p>
-
+ 
             <section className="mb-12">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center">
                 <Shield className="h-5 w-5 mr-2 text-indigo-600" />
@@ -138,7 +138,7 @@ export default function RefundPolicy() {
                 <p className="text-sm text-gray-600">ShaviStore, Bahadurgarh, Haryana, India</p>
               </div>
             </section>
-
+    
             <footer className="border-t pt-6 text-center text-gray-500">
               <p>Last updated: {lastUpdated}</p>
             </footer>

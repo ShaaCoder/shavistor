@@ -28,7 +28,7 @@ const sampleProducts = [
       'https://images.unsplash.com/photo-1522338140262-f46f5913618a?w=400',
       'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400'
     ],
-    brand: 'BeautyMart',
+    brand: 'Home Utility Products',
     stock: 50,
     rating: 4.5,
     reviewCount: 23,

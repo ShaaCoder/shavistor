@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     
     if (!response.ok) {
       return {
-        title: 'Product Not Found | BeautyMart',
+        title: 'Product Not Found | Home Utility Products',
         description: 'The requested product could not be found.'
       };
     }
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     
     if (!product) {
       return {
-        title: 'Product Not Found | BeautyMart',
+        title: 'Product Not Found | Home Utility Products',
         description: 'The requested product could not be found.'
       };
     }
@@ -47,8 +47,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return generateProductMetadata(product);
   } catch (error) {
     return {
-      title: 'BeautyMart - Premium Beauty Products',
-      description: 'Discover premium beauty products at BeautyMart.'
+      title: 'Home Utility Products - Premium Beauty Products',
+      description: 'Discover Housekeeping Essentialsat Home Utility Products.'
     };
   }
 }

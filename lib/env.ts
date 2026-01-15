@@ -33,7 +33,7 @@ export const env = cleanEnv(process.env, {
   // Email Configuration
   EMAIL_USER: str({ default: '' }),
   EMAIL_PASSWORD: str({ default: '' }),
-  EMAIL_FROM_NAME: str({ default: 'BeautyMart' }),
+  EMAIL_FROM_NAME: str({ default: 'Home Utility Products' }),
   EMAIL_FROM_ADDRESS: str({ default: '' }),
   
   // Payment Gateway Configuration

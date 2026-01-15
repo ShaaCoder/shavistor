@@ -14,7 +14,7 @@ import Order from '@/models/Order';
 const sampleUsers = [
   {
     name: 'Admin User',
-    email: 'admin@beautymart.com',
+    email: 'admin@Home Utility Products.com',
     username: 'shadow',
     password: 'Admin123',
     role: 'admin',
@@ -245,7 +245,7 @@ async function seedDatabase() {
     console.log(`Users: ${createdUsers.length}`);
     console.log(`Products: ${createdProducts.length}`);
     console.log('\n🔐 Test Credentials:');
-    console.log('Admin: admin@beautymart.com / Admin123!');
+    console.log('Admin: admin@Home Utility Products.com / Admin123!');
     console.log('Customer: priya@example.com / User123!');
     
   } catch (error) {

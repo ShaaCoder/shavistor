@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
         slug: (product.category as any).slug,
         description: (product.category as any).description,
         image: resolveImageUrl((product.category as any).image || '')
-      } : typeof product.category === 'object' && '_id' in product.category ? String(product.category._id) : product.category,
+      } : product.category && typeof product.category === 'object' && '_id' in product.category ? String(product.category._id) : product.category,
       subcategory: product.subcategory,
       brand: product.brand,
       stock: product.stock,

@@ -19,7 +19,7 @@ Allow: /categories/
 Allow: /
 
 # Sitemap location
-Sitemap: https://beautymart.com/sitemap.xml
+Sitemap: https://Home Utility Products.com/sitemap.xml
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
