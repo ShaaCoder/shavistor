@@ -98,9 +98,9 @@ export function Header() {
 
           {/* Action buttons */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="hidden sm:flex">
+            {/* <Button variant="ghost" size="icon" className="hidden sm:flex">
               <Heart className="w-5 h-5" />
-            </Button>
+            </Button> */}
             
             <AuthWrapper 
               fallback={
